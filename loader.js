@@ -22,7 +22,7 @@ function loadData() {
             if (k === null || !k.hasOwnProperty(key) || !k[key].hasOwnProperty('data') || !k[[key]].hasOwnProperty('date')) {
                 fetchData(url, key).then(data => resolve(data))
             } else {
-                ttl = new Date(k[key].date + 60000)
+                ttl = new Date(k[key].date + (5 * 60 * 1000))
                 if (ttl < new Date()) {
                     fetchData(url, key).then(data => resolve(data))
                 } else {
