@@ -78,9 +78,11 @@ function calculateRanking(data) {
           score = max_score - index
           ranking[member.id].scores[d] += score
           ranking[member.id].total_score += score
+          ranking[member.id].ranks[d] = index + 1
+        } else {
+          ranking[member.id].ranks[d] = 0
         }
 
-        ranking[member.id].ranks[d] = index + 1
         ranking[member.id].total_scores[d] = ranking[member.id].total_score
       })
     }
