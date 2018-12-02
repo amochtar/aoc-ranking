@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "AoC Ranking",
-  "version": "1.0.9",
+  "name": "Advent of Code Ranking",
+  "version": "1.1.0",
 
   "description": "Visualize the ranking over time of a Advent of Code private leaderboard",
 
@@ -14,7 +14,7 @@
 
   "content_scripts": [{
     "matches": ["https://adventofcode.com/*/leaderboard/private/view/*"],
-    "js": ["browser-polyfill.min.js", "d3.v2.min.js", "calculate.js", "visualize.js", "loader.js"],
+    "js": ["browser-polyfill.min.js", "d3.v5.min.js", "calculate.js", "visualize.js", "loader.js"],
     "css": ["ranking.css"]
   }]
 }
