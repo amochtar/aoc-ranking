@@ -1,34 +1,3 @@
-/* body {
-    margin: 0;
-    padding: 0;
-    background-color: #0f0f23;
-    font-family: "Source Code Pro", monospace;
-    font-size: 14px;
-    color: #cccccc;
-    overflow: hidden;
-} */
-
-/* h1, h1 a {
-    font-size: 20px;
-    color: #00cc00;
-    text-shadow: 0 0 2px #00cc00, 0 0 5px #00cc00;
-    text-align: center;
-}
-
-#attrib {
-    position: absolute;
-    bottom: 0px;
-    width: 100%;
-    padding: 10px;
-    font-size: 10px;
-    color: #cccccc;
-    text-align: center;
-}
-#attrib a {
-    color: #ffffff;
-    text-shadow: 0 0 5px #ffffff;
-} */
-
 #chart {
     overflow-y: auto;
 }
