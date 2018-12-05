@@ -14,19 +14,17 @@ function fetchData(url, key) {
 
 function loadData() {
     return new Promise((resolve, reject) => {
-        url = document.location.href.split('#')[0] + ".json"
-        parts = document.location.pathname.split('/')
-        key = parts[1] + '_' + parts.pop()
+        url = document.location.protocol + '//' + document.location.host + document.location.pathname + ".json"
 
-        browser.storage.local.get(key).then(k => {
-            if (k === null || !k.hasOwnProperty(key) || !k[key].hasOwnProperty('data') || !k[[key]].hasOwnProperty('date')) {
-                fetchData(url, key).then(data => resolve(data))
+        browser.storage.local.get(url).then(k => {
+            if (k === null || !k.hasOwnProperty(url) || !k[url].hasOwnProperty('data') || !k[[url]].hasOwnProperty('date')) {
+                fetchData(url, url).then(data => resolve(data))
             } else {
-                ttl = new Date(k[key].date + (5 * 60 * 1000))
+                ttl = new Date(k[url].date + (5 * 60 * 1000))
                 if (ttl < new Date()) {
-                    fetchData(url, key).then(data => resolve(data))
+                    fetchData(url, url).then(data => resolve(data))
                 } else {
-                    resolve(k[key].data)
+                    resolve(k[url].data)
                 }
             }
         })
