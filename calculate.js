@@ -45,15 +45,21 @@ function calculateRanking(data) {
   // initialize ranking structure
   members = Object.values(data.members)
   ranking = {}
-  members.forEach(member => ranking[member.id] = {
-    id: member.id,
-    name: member.name,
-    total_score: 0,
-    scores: [],
-    ranks: [],
-    stars: [],
-    total_scores: [],
-    total_ranks: []
+  members.forEach(member => {
+    name = member.name
+    if (member.name === undefined) {
+      name = 'User #' + member.id
+    }
+    ranking[member.id] = {
+      id: member.id,
+      name: name,
+      total_score: 0,
+      scores: [],
+      ranks: [],
+      stars: [],
+      total_scores: [],
+      total_ranks: []
+    }
   })
 
   // max score per star is number of members

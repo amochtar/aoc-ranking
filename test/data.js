@@ -5,7 +5,6 @@ data = {
             "last_star_ts": "1514231301",
             "stars": 50,
             "local_score": 1718,
-            "name": "27495",
             "global_score": 0,
             "completion_day_level": {
                 "1": {
