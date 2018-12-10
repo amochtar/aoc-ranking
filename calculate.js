@@ -87,11 +87,14 @@ function calculateRanking(data) {
           if (ranking[member.id].stars[d] === undefined) {
             ranking[member.id].stars[d] = 0
           }
-
           completed = getMemberCompletionDayLevel(member, d+1, l)
           if (completed !== null) {
             ranking[member.id].stars[d] = l
-            score = max_score - index
+            if (data.event == "2018" && d+1 == 6) {
+              score = 0
+            } else {
+              score = max_score - index
+            }
             ranking[member.id].scores[d] += score
             ranking[member.id].total_score += score
             ranking[member.id].ranks[d] = index + 1
