@@ -47,7 +47,7 @@ function calculateRanking(data) {
   ranking = {}
   members.forEach(member => {
     name = member.name
-    if (member.name === undefined) {
+    if (member.name === undefined || member.name === null) {
       name = 'User #' + member.id
     }
     ranking[member.id] = {
