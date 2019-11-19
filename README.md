@@ -4,7 +4,7 @@ Visualize the ranking over time of an [Advent of Code](https://www.adventofcode.
 
 See https://amochtar.github.io/aoc-ranking/ for an interactive example.
 
-![#Global Leaderboard Ranking](example/ranking.png "Private Leaderboard Ranking Example")
+![#Private Leaderboard Ranking](example/ranking.png "Private Leaderboard Ranking Example")
 
 
 ## Installation
