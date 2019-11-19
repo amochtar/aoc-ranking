@@ -110,8 +110,8 @@ export function calculateRanking(data) {
 
   // finally get total_ranks for all days
   for (let d = 0; d < 25; d++) {
-    date = Date.UTC(data.event, 11, d+1, 5)
-    if (d < max_days || date < new Date().getTime()) {
+    let date = Date.UTC(data.event, 11, d+1, 5)
+    if (d === 0 || d < max_days || date < new Date().getTime()) {
       ranking.sort(compareRankingByDay(d))
       ranking.forEach(function(rank, index) {
         ranking[index].total_ranks[d] = index + 1
