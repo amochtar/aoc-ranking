@@ -1,0 +1,28 @@
+#chart {
+    overflow-y: auto;
+}
+
+text.day {
+    fill: #999999;
+}
+
+text.label {
+    fill: #000000;
+}
+
+text.label.medal {
+    font-weight: bold;
+}
+
+circle.medal {
+    stroke-width: 1;
+}
+
+polyline.ranking {
+    fill: none;
+    stroke-width: 3;
+}
+
+line.tickLine {
+    stroke: #999999;
+}

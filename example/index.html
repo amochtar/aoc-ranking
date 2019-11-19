@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>AoC Ranking</title>
+        <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:300&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="ranking.css">
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                background-color: #0f0f23;
+                font-family: "Source Code Pro", monospace;
+                font-size: 14px;
+                color: #cccccc;
+                overflow: hidden;
+            }
+            h1, h1 a {
+                font-size: 20px;
+                color: #00cc00;
+                text-shadow: 0 0 2px #00cc00, 0 0 5px #00cc00;
+                text-align: center;
+            }
+            a {
+                text-decoration: none;
+                color: #009900;
+            }
+            a:hover {
+                color: #99ff99;
+            }
+            #attrib {
+                position: absolute;
+                bottom: 0px;
+                width: 100%;
+                padding: 10px;
+                font-size: 10px;
+                color: #cccccc;
+                text-align: center;
+            }
+            #chart {
+                height: calc(100vh - 100px);
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Advent of Code - Example Private Leaderboard Ranking Visualization - Follow Xebia at <a href="https://xebia.com/community/advent-of-code">#XebiaAoC</a></h1>
+        <div id="chart"></div>
+        <div id="attrib">
+            Created by <a href="https://github.com/amochtar/aoc-ranking">Ad&eacute; Mochtar</a>
+            Inspired by <a href="http://www.vislives.com/2012/03/d3-lap-charts.html">F1 Lap Chart</a>
+        </div>
+        <script src="data.js"></script>
+        <script src="ranking.js"></script>
+    </body>
+</html>
