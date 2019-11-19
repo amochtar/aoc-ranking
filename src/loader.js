@@ -1,8 +1,12 @@
+if (typeof chrome === "object" && chrome && chrome.runtime && chrome.runtime.id) {
+    browser = require("webextension-polyfill")
+}
+
 function fetchData(url, key) {
     return fetch(url)
         .then(response => response.json())
         .then(data => {
-            val = {
+            var val = {
                 data: data,
                 date: new Date().getTime()
             }
@@ -12,15 +16,20 @@ function fetchData(url, key) {
         .catch(err => {console.log(err)})
 }
 
-function loadData() {
+export function loadData() {
     return new Promise((resolve, reject) => {
-        url = document.location.protocol + '//' + document.location.host + document.location.pathname + ".json"
+        if (window.data) {
+            resolve(window.data)
+            return
+        }
+
+        const url = document.location.protocol + '//' + document.location.host + document.location.pathname + ".json"
 
         browser.storage.local.get(url).then(k => {
             if (k === null || !k.hasOwnProperty(url) || !k[url].hasOwnProperty('data') || !k[[url]].hasOwnProperty('date')) {
                 fetchData(url, url).then(data => resolve(data))
             } else {
-                ttl = new Date(k[url].date + (5 * 60 * 1000))
+                const ttl = new Date(k[url].date + (5 * 60 * 1000))
                 if (ttl < new Date()) {
                     fetchData(url, url).then(data => resolve(data))
                 } else {
@@ -30,7 +39,3 @@ function loadData() {
         })
     })
 }
-
-loadData()
-    .then(data => calculateRanking(data))
-    .then(ranking => visualize(ranking))

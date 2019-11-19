@@ -1,0 +1,38 @@
+{
+  "name": "aoc-ranking-extension",
+  "version": "1.1.4",
+  "description": "Visualize the ranking over time of a Advent of Code private leaderboard",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amochtar/aoc-ranking.git"
+  },
+  "keywords": [
+    "adventofcode",
+    "ranking",
+    "leaderboard",
+    "visualization"
+  ],
+  "author": "Adé Mochtar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/amochtar/aoc-ranking/issues"
+  },
+  "homepage": "https://github.com/amochtar/aoc-ranking#readme",
+  "dependencies": {
+    "d3": "^5.14.1",
+    "webextension-polyfill": "^0.5.0"
+  },
+  "devDependencies": {
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.0.5",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  }
+}

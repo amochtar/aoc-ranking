@@ -1,3 +1,5 @@
+const d3 = require("d3")
+
 const WIDTH = Math.max(1120, window.getComputedStyle(document.body).width.replace("px", ""));
 
 const INSETS = {'left': 275, 'right': 300, 'top': 30, 'bottom': 30};
@@ -13,8 +15,8 @@ var HIGHLIGHT_OPACITY = 1.0;
 const DAY_COUNT = 25
 const ROW_HEIGHT = 35
 
-function visualize(data) {
-    chart = document.getElementById("chart")
+export function visualize(data) {
+    var chart = document.getElementById("chart")
     if (chart === null) {
         chart = document.createElement("div")
         chart.setAttribute("id", "chart")
@@ -57,9 +59,9 @@ function visualize(data) {
 function getTextWidth(text) {
     var context = getTextWidth.context
     if (context === undefined) {
-        canvas = document.createElement("canvas")
-        context = canvas.getContext("2d");
-        bodyStyle = getTextWidth.bodyStyle || (getTextWidth.bodyStyle = window.getComputedStyle(document.body))
+        var canvas = document.createElement("canvas")
+        var context = canvas.getContext("2d");
+        var bodyStyle = getTextWidth.bodyStyle || (getTextWidth.bodyStyle = window.getComputedStyle(document.body))
         context.font = bodyStyle.fontSize + ' ' + bodyStyle.fontFamily;
         getTextWidth.context = context
     }
@@ -68,9 +70,9 @@ function getTextWidth(text) {
 }
 
 function configureScales(data) {
-    labelWidth = 50 + data.ranking.reduce((
+    const labelWidth = 50 + data.ranking.reduce((
         (acc, m) => {
-            w = getTextWidth(m.name);
+            const w = getTextWidth(m.name);
             if (w > acc) {
                 return w
             }
@@ -85,7 +87,7 @@ function configureScales(data) {
         .domain([0, data.ranking.length-1])
         .range([INSETS.top, data.ranking.length*ROW_HEIGHT - INSETS.bottom]);
 
-    schemeCategory20=["#1f77b4","#aec7e8","#ff7f0e","#ffbb78","#2ca02c","#98df8a","#d62728","#ff9896","#9467bd","#c5b0d5","#8c564b","#c49c94","#e377c2","#f7b6d2","#7f7f7f","#c7c7c7","#bcbd22","#dbdb8d","#17becf","#9edae5"]
+    const schemeCategory20=["#1f77b4","#aec7e8","#ff7f0e","#ffbb78","#2ca02c","#98df8a","#d62728","#ff9896","#9467bd","#c5b0d5","#8c564b","#c49c94","#e377c2","#f7b6d2","#7f7f7f","#c7c7c7","#bcbd22","#dbdb8d","#17becf","#9edae5"]
     SCALES.clr = d3.scaleOrdinal(schemeCategory20);
 }
 
@@ -275,7 +277,7 @@ function addProgress(vis, data) {
                     return "#0f0f23"
                 }
                 else if (member.stars[i] == 1) {
-                    gradId = "m" + member.id + "d" + i
+                    var gradId = "m" + member.id + "d" + i
                     var grad = vis.select("defs").append("linearGradient").attr("id", gradId)
                         .attr("x1", "0%").attr("x2", "100%").attr("y1", "100%").attr("y2", "100%");
                     grad.append("stop").attr("offset", "49%").style("stop-color", SCALES.clr(member.total_ranks[0]));

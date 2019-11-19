@@ -1,6 +1,6 @@
 // note: days and levels are 1-based here
 function getMemberCompletionDayLevel(member, day, level) {
-  let completed = null
+  var completed = null
 
   if (member.completion_day_level !== undefined &&
       member.completion_day_level[day] != undefined &&
@@ -15,8 +15,8 @@ function getMemberCompletionDayLevel(member, day, level) {
 // note: days and levels are 1-based here
 function compareMembersByDayLevel(day, level) {
   return function (a, b) {
-    aCompleted = getMemberCompletionDayLevel(a, day, level)
-    bCompleted = getMemberCompletionDayLevel(b, day, level)
+    const aCompleted = getMemberCompletionDayLevel(a, day, level)
+    const bCompleted = getMemberCompletionDayLevel(b, day, level)
 
     if (aCompleted === bCompleted) {
       return +b.id - +a.id
@@ -41,10 +41,10 @@ function compareRankingByDay(day) {
   }
 }
 
-function calculateRanking(data) {
+export function calculateRanking(data) {
   // initialize ranking structure
-  members = Object.values(data.members)
-  ranking = {}
+  var members = Object.values(data.members)
+  var ranking = {}
   members.forEach(member => {
     name = member.name
     if (member.name === undefined || member.name === null) {
@@ -63,10 +63,10 @@ function calculateRanking(data) {
   })
 
   // max score per star is number of members
-  max_score = members.length
+  const max_score = members.length
 
-  max_days = Object.values(data.members).reduce(function(acc, m) {
-      l = Object.values(m.completion_day_level).length;
+  var max_days = Object.values(data.members).reduce(function(acc, m) {
+      var l = Object.values(m.completion_day_level).length;
       if (l > acc) {
         return l;
       }
@@ -75,7 +75,7 @@ function calculateRanking(data) {
 
   // do actual calculation of scores, ranks and stars
   for (let d = 0; d < 25; d++) {
-    date = Date.UTC(data.event, 11, d+1, 5)
+    var date = Date.UTC(data.event, 11, d+1, 5)
     if (d < max_days || date < new Date().getTime()) {
       for (let l = 1; l <= 2; l++) {
         members.sort(compareMembersByDayLevel(d+1, l))
@@ -87,13 +87,12 @@ function calculateRanking(data) {
           if (ranking[member.id].stars[d] === undefined) {
             ranking[member.id].stars[d] = 0
           }
-          completed = getMemberCompletionDayLevel(member, d+1, l)
+          var completed = getMemberCompletionDayLevel(member, d+1, l)
           if (completed !== null) {
             ranking[member.id].stars[d] = l
+            var score = max_score - index
             if (data.event == "2018" && d+1 == 6) {
               score = 0
-            } else {
-              score = max_score - index
             }
             ranking[member.id].scores[d] += score
             ranking[member.id].total_score += score
