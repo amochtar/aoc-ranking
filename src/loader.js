@@ -1,6 +1,4 @@
-if (typeof chrome === "object" && chrome && chrome.runtime && chrome.runtime.id) {
-    browser = require("webextension-polyfill")
-}
+const browser = require("webextension-polyfill")
 
 function fetchData(url, key) {
     return fetch(url)
