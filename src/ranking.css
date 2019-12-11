@@ -6,6 +6,18 @@ text.day {
     fill: #999999;
 }
 
+text.sort {
+    cursor: pointer;
+    fill: #999999;
+    width: 100%;
+}
+
+text.sort .em {
+    fill: #ffffff;
+    font-style: normal;
+    text-shadow: 0 0 5px #ffffff;
+}
+
 text.label {
     fill: #000000;
 }

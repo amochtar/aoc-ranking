@@ -34,6 +34,16 @@ function compareMembersByDayLevel(day, level) {
 // note: day is 0-based here
 function compareRankingByDay(day) {
   return function (a, b) {
+    if (a.scores[day] === b.scores[day]) {
+      return +a.id - +b.id
+    }
+    return b.scores[day] - a.scores[day]
+  }
+}
+
+// note: day is 0-based here
+function compareTotalRankingByDay(day) {
+  return function (a, b) {
     if (a.total_scores[day] === b.total_scores[day]) {
       return +a.id - +b.id
     }
@@ -58,7 +68,8 @@ export function calculateRanking(data) {
       ranks: [],
       stars: [],
       total_scores: [],
-      total_ranks: []
+      total_ranks: [],
+      completed: []
     }
   })
 
@@ -73,7 +84,7 @@ export function calculateRanking(data) {
       return acc;
     }, 0)
 
-  // do actual calculation of scores, ranks and stars
+  // do actual calculation of scores and stars
   for (let d = 0; d < 25; d++) {
     var date = Date.UTC(data.event, 11, d+1, 5)
     if (d < max_days || date < new Date().getTime()) {
@@ -96,11 +107,8 @@ export function calculateRanking(data) {
             }
             ranking[member.id].scores[d] += score
             ranking[member.id].total_score += score
-            ranking[member.id].ranks[d] = index + 1
-          } else {
-            ranking[member.id].ranks[d] = 0
           }
-
+          ranking[member.id].completed[d] = completed
           ranking[member.id].total_scores[d] = ranking[member.id].total_score
         })
       }
@@ -108,11 +116,15 @@ export function calculateRanking(data) {
   }
   ranking = Object.values(ranking)
 
-  // finally get total_ranks for all days
+  // finally get ranks and total_ranks for all days
   for (let d = 0; d < 25; d++) {
     let date = Date.UTC(data.event, 11, d+1, 5)
     if (d === 0 || d < max_days || date < new Date().getTime()) {
       ranking.sort(compareRankingByDay(d))
+      ranking.forEach(function(rank, index) {
+        ranking[index].ranks[d] = index + 1
+      })
+      ranking.sort(compareTotalRankingByDay(d))
       ranking.forEach(function(rank, index) {
         ranking[index].total_ranks[d] = index + 1
       })

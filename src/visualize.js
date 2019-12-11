@@ -2,7 +2,7 @@ const d3 = require("d3")
 
 const WIDTH = Math.max(1120, window.getComputedStyle(document.body).width.replace("px", ""));
 
-const INSETS = {'left': 275, 'right': 300, 'top': 30, 'bottom': 30};
+const INSETS = {'left': 275, 'right': 300, 'top': 70, 'bottom': 30};
 const PADDING = {'left': 20, 'right': 20, 'top': 15, 'bottom': 15};
 
 const TICK_MARK_LENGTH = 8;
@@ -15,7 +15,12 @@ var HIGHLIGHT_OPACITY = 1.0;
 const DAY_COUNT = 25
 const ROW_HEIGHT = 35
 
-export function visualize(data) {
+const SortModes = {
+    TOTAL_RANK: 0,
+    DAY_RANK: 1
+}
+
+export function visualize(data, mode=SortModes.TOTAL_RANK) {
     var chart = document.getElementById("chart")
     if (chart === null) {
         chart = document.createElement("div")
@@ -31,27 +36,35 @@ export function visualize(data) {
     var vis = d3.select(chart)
         .append('svg:svg')
         .attr('width', '100%')
-        .attr('height', data.ranking.length*ROW_HEIGHT)
+        .attr('height', (data.ranking.length+1)*ROW_HEIGHT)
 
     configureScales(data);
+
+    addSorters(vis, data, mode);
 
     addDayTickLines(vis, DAY_COUNT);
 
     addLabels(vis, DAY_COUNT, SCALES.y.range()[0] - PADDING.bottom, '0.0em');
 
-    addRankingLines(vis, data);
+    addRankingLines(vis, data, mode);
 
     addNameLabels(vis, data, 'left', SCALES.x(0) - PADDING.right, 'end')
         .attr('y', function (d) {
+            if (mode === SortModes.DAY_RANK) {
+                return SCALES.y(d.ranks[0]-1);
+            }
             return SCALES.y(d.total_ranks[0]-1);
         });
     addNameLabels(vis, data, 'right', SCALES.x(DAY_COUNT-1) + PADDING.left, 'start')
-            .attr('y', function (d, i) {
+        .attr('y', function (d, i) {
+            if (mode === SortModes.DAY_RANK) {
+                return SCALES.y(d.ranks[d.ranks.length-1]-1);
+            }
             return SCALES.y(i);
         });
 
-    addProgress(vis, data);
-    addMedals(vis, data);
+    addProgress(vis, data, mode);
+    addMedals(vis, data, mode);
 
     return data
 }
@@ -132,6 +145,41 @@ function unhighlight(vis) {
         .style('opacity', HIGHLIGHT_OPACITY);
 }
 
+function addSorters(vis, data, mode) {
+    var sortNode = vis.append('svg:text')
+        .attr('class', 'sort')
+        .attr('x', '50%')
+        .attr('y', '1em')
+        // .attr('dy', '0')
+        .attr('text-anchor', 'middle')
+        .on('click', function(){
+            visualize(data, 1-mode)
+        });
+
+    sortNode.append('tspan')
+        .text('Showing ranking based on ');
+
+    sortNode.append('tspan')
+        .attr('class', 'em')
+        .text(function() {
+            if (mode === SortModes.TOTAL_RANK) {
+                return "total score"
+            }
+            return "score per day"
+        });
+
+    sortNode.append('tspan')
+        .text('. Switch to ranking on ');
+
+    sortNode.append('tspan')
+        .text(function() {
+            if (mode === SortModes.TOTAL_RANK) {
+                return "score per day."
+            }
+            return "total score."
+        });
+}
+
 function addDayTickLines(vis, dayCount) {
     vis.selectAll('line.tickLine')
         .data(SCALES.x.ticks(dayCount))
@@ -150,9 +198,9 @@ function addDayTickLines(vis, dayCount) {
         });
 }
 
-function addLabels(vis, data, y, dy) {
+function addLabels(vis, day_count, y, dy) {
     vis.selectAll('text.day')
-        .data(SCALES.x.ticks(data))
+        .data(SCALES.x.ticks(day_count))
         .enter().append('svg:text')
         .attr('class', 'day')
         .attr('x', function(d) {
@@ -166,7 +214,7 @@ function addLabels(vis, data, y, dy) {
         });
 }
 
-function addRankingLines(vis, data) {
+function addRankingLines(vis, data, mode) {
     vis.selectAll('polyline.ranking')
         .data(data.ranking)
         .enter()
@@ -174,9 +222,15 @@ function addRankingLines(vis, data) {
         .attr('class', 'ranking')
         .attr('points', function(d, idx) {
             var points = [];
-            d.total_ranks.forEach((rank, i) => {
-                points[i] = SCALES.x(i) + ',' + SCALES.y(rank-1)
-            })
+            if (mode === SortModes.DAY_RANK) {
+                d.ranks.forEach((rank, i) => {
+                    points[i] = SCALES.x(i) + ',' + SCALES.y(rank-1)
+                })
+            } else {
+                d.total_ranks.forEach((rank, i) => {
+                    points[i] = SCALES.x(i) + ',' + SCALES.y(rank-1)
+                })
+            }
             return points.join(' ');
         })
         .style('stroke', function(d) {
@@ -213,7 +267,7 @@ function addNameLabels(vis, data, cssClass, x, textAnchor) {
         });
 }
 
-function addMedals(vis, data) {
+function addMedals(vis, data, mode) {
     var symbolGenerator = d3.symbol()
     	.type(d3.symbolStar)
         .size(150);
@@ -227,6 +281,9 @@ function addMedals(vis, data) {
             .append("path")
             .attr("class", "medal m" + member.id)
             .attr('transform', function(d, i) {
+                if (mode === SortModes.DAY_RANK) {
+                    return 'translate(' + SCALES.x(i) + ', ' + SCALES.y(member.ranks[i] - 1) + ')';
+                }
                 return 'translate(' + SCALES.x(i) + ', ' + SCALES.y(member.total_ranks[i] - 1) + ')';
             })
             .filter(function(d) { return 0 < d && d <= 3 })
@@ -254,7 +311,7 @@ function addMedals(vis, data) {
     });
 }
 
-function addProgress(vis, data) {
+function addProgress(vis, data, mode) {
     data.ranking.forEach(function (member, idx) {
         vis.append("defs");
         vis.selectAll("circle.progress.m" + member.id)
@@ -266,7 +323,10 @@ function addProgress(vis, data) {
                 return SCALES.x(i);
             })
             .attr("cy", function(d, i) {
-                return SCALES.y(member.total_ranks[i] - 1);
+                if (mode === SortModes.DAY_RANK) {
+                    return SCALES.y(member.ranks[i]-1);
+                }
+                return SCALES.y(member.total_ranks[i]-1);
             })
             .attr("r", 5)
             .style("stroke", function(d, i) {
