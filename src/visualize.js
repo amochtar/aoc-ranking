@@ -33,12 +33,13 @@ export function visualize(data, mode=SortModes.TOTAL_RANK) {
         }
     }
 
+    var height = (data.ranking.length)*ROW_HEIGHT + INSETS.top + INSETS.bottom
     var vis = d3.select(chart)
         .append('svg:svg')
         .attr('width', '100%')
-        .attr('height', (data.ranking.length+1)*ROW_HEIGHT)
+        .attr('height', height)
 
-    configureScales(data);
+    configureScales(data, height);
 
     addSorters(vis, data, mode);
 
@@ -83,7 +84,7 @@ function getTextWidth(text) {
     return metrics.width;
 }
 
-function configureScales(data) {
+function configureScales(data, height) {
     const labelWidth = 50 + data.ranking.reduce((
         (acc, m) => {
             const w = getTextWidth(m.name);
@@ -99,7 +100,7 @@ function configureScales(data) {
 
     SCALES.y = d3.scaleLinear()
         .domain([0, data.ranking.length-1])
-        .range([INSETS.top, data.ranking.length*ROW_HEIGHT - INSETS.bottom]);
+        .range([INSETS.top, height - INSETS.bottom]);
 
     const schemeCategory20=["#1f77b4","#aec7e8","#ff7f0e","#ffbb78","#2ca02c","#98df8a","#d62728","#ff9896","#9467bd","#c5b0d5","#8c564b","#c49c94","#e377c2","#f7b6d2","#7f7f7f","#c7c7c7","#bcbd22","#dbdb8d","#17becf","#9edae5"]
     SCALES.clr = d3.scaleOrdinal(schemeCategory20);
