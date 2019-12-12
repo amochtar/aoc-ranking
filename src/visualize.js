@@ -286,7 +286,12 @@ function addMedals(vis, data, mode) {
                 }
                 return 'translate(' + SCALES.x(i) + ', ' + SCALES.y(member.total_ranks[i] - 1) + ')';
             })
-            .filter(function(d) { return 0 < d && d <= 3 })
+            .filter(function(d, i) {
+                if (!member.completed[i]) {
+                    return false
+                }
+                return 0 < d && d <= 3
+            })
             .attr('d', pathData)
             .style("stroke", function(d, i) {
                 return "#0f0f23"
@@ -348,7 +353,7 @@ function addProgress(vis, data, mode) {
                 return SCALES.clr(member.total_ranks[0]);
             })
             .style("visibility", function(d, i) {
-                if (0 < d && d <= 3) {
+                if (0 < d && d <= 3 && member.completed[i]) {
                     return "hidden"
                 }
                 if (member.stars[i] < 2) {
