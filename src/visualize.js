@@ -65,6 +65,7 @@ export function visualize(data, mode=SortModes.TOTAL_RANK) {
 
     addProgress(vis, data, mode);
     addMedals(vis, data, mode);
+    addDayRanking(vis, data, mode);
 
     return data
 }
@@ -132,6 +133,8 @@ function highlight(vis, id) {
         .style('opacity', function(d) {
             return d.id == id ? HIGHLIGHT_OPACITY : DIMMED_OPACITY;
         });
+    vis.selectAll('.dayrank.completed.m'+id)
+        .style('visibility', 'visible')
 }
 
 function unhighlight(vis) {
@@ -143,6 +146,8 @@ function unhighlight(vis) {
         .style('opacity', HIGHLIGHT_OPACITY);
     vis.selectAll('text.label')
         .style('opacity', HIGHLIGHT_OPACITY);
+    vis.selectAll('.dayrank')
+        .style('visibility', 'hidden')
 }
 
 function addSorters(vis, data, mode) {
@@ -373,3 +378,87 @@ function addProgress(vis, data, mode) {
     });
 }
 
+function addDayRanking(vis, data, mode) {
+    data.ranking.forEach(function (member, idx) {
+        vis.append("defs");
+        vis.selectAll("circle.dayrank.m" + member.id)
+            .data(member.ranks)
+            .enter()
+            .append("svg:circle")
+            .attr("class", function(d, i) {
+                if (member.completed[i]) {
+                    return "dayrank completed m" + member.id
+                }
+                return "dayrank m" + member.id
+            })
+            .attr("cx", function(d, i) {
+                return SCALES.x(i);
+            })
+            .attr("cy", function(d, i) {
+                if (mode === SortModes.DAY_RANK) {
+                    return SCALES.y(member.ranks[i]-1);
+                }
+                return SCALES.y(member.total_ranks[i]-1);
+            })
+            .attr("r", 10)
+            .style("stroke", function(d, i) {
+                return SCALES.clr(member.total_ranks[0]);
+            })
+            .style("color", function(d, i) {
+                return SCALES.clr(member.total_ranks[0]);
+            })
+            .style("fill", function(d, i) {
+                return SCALES.clr(member.total_ranks[0]);
+            })
+            .style("visibility", "hidden")
+            .on('mouseover', function(d) {
+                highlight(vis, member.id);
+            })
+            .on('mouseout', function() {
+                unhighlight(vis);
+            });
+        vis.selectAll("text.dayrank.m" + member.id)
+            .data(member.ranks)
+            .enter()
+            .append("svg:text")
+            .attr("class", function(d, i) {
+                if (member.completed[i]) {
+                    return "dayrank completed m" + member.id
+                }
+                return "dayrank m" + member.id
+            })
+            .attr("x", function(d, i) {
+                return SCALES.x(i);
+            })
+            .attr("y", function(d, i) {
+                if (mode === SortModes.DAY_RANK) {
+                    return SCALES.y(member.ranks[i]-1);
+                }
+                return SCALES.y(member.total_ranks[i]-1);
+            })
+            .attr('dy', '0.35em')
+            .attr('text-anchor', 'middle')
+            .style("stroke", function(d, i) {
+                return "#0f0f23"
+            })
+            .style("visibility", "hidden")
+            .style("font-size", function(d,i) {
+                if (d > 1000) {
+                    return "xx-small"
+                }
+                if (d > 100) {
+                    return "x-small"
+                }
+                return "small"
+            })
+            .text(function(d, i){
+                return d
+            })
+            .on('mouseover', function(d) {
+                highlight(vis, member.id);
+            })
+            .on('mouseout', function() {
+                unhighlight(vis);
+            });
+    });
+}
