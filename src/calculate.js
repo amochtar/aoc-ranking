@@ -69,7 +69,8 @@ export function calculateRanking(data) {
       stars: [],
       total_scores: [],
       total_ranks: [],
-      completed: []
+      completed: [],
+      medals: []
     }
   })
 
@@ -110,6 +111,12 @@ export function calculateRanking(data) {
           }
           ranking[member.id].completed[d] = completed
           ranking[member.id].total_scores[d] = ranking[member.id].total_score
+          if (completed && index < 3) {
+            ranking[member.id].medals[d] = index + 1
+          }
+          else {
+            ranking[member.id].medals[d] = 0
+          }
         })
       }
     }

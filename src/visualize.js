@@ -282,7 +282,7 @@ function addMedals(vis, data, mode) {
     data.ranking.forEach(function (member, idx) {
         vis.append("defs");
         vis.selectAll("path.medal.m" + member.id)
-            .data(member.ranks)
+            .data(member.medals)
             .enter()
             .append("path")
             .attr("class", "medal m" + member.id)
@@ -293,9 +293,6 @@ function addMedals(vis, data, mode) {
                 return 'translate(' + SCALES.x(i) + ', ' + SCALES.y(member.total_ranks[i] - 1) + ')';
             })
             .filter(function(d, i) {
-                if (!member.completed[i]) {
-                    return false
-                }
                 return 0 < d && d <= 3
             })
             .attr('d', pathData)
@@ -359,7 +356,7 @@ function addProgress(vis, data, mode) {
                 return SCALES.clr(member.total_ranks[0]);
             })
             .style("visibility", function(d, i) {
-                if (0 < d && d <= 3 && member.completed[i]) {
+                if (0 < d && d <= 3 && member.medals[i]) {
                     return "hidden"
                 }
                 if (member.stars[i] < 2) {
