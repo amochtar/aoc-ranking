@@ -72,7 +72,8 @@ export function calculateRanking(data) {
             total_scores: [],
             total_ranks: [],
             completed: [],
-            medals: []
+            medals: [],
+            times: []
         };
     });
 
@@ -114,6 +115,10 @@ export function calculateRanking(data) {
                         }
                         ranking[member.id].scores[d] += score;
                         ranking[member.id].total_score += score;
+                        ranking[member.id].times[d] = completed - date / 1000; // completed is in s, date is in ms
+                    }
+                    else {
+                        ranking[member.id].times[d] = null; // null if and only if completed is null
                     }
                     ranking[member.id].completed[d] = completed;
                     ranking[member.id].total_scores[d] =
