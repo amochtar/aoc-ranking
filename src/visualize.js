@@ -462,7 +462,7 @@ function addDayRanking(vis, data, mode) {
                 unhighlight(vis);
             });
         vis.selectAll("text.dayrank.m" + member.id)
-            .data(member.ranks)
+            .data(d3.zip(member.ranks, member.times))
             .enter()
             .append("svg:text")
             .attr("class", function(d, i) {
@@ -487,22 +487,38 @@ function addDayRanking(vis, data, mode) {
             })
             .style("visibility", "hidden")
             .style("font-size", function(d, i) {
-                if (d > 1000) {
+                var dRank = d[0];
+                if (dRank > 1000) {
                     return "xx-small";
                 }
-                if (d > 100) {
+                if (dRank > 100) {
                     return "x-small";
                 }
                 return "small";
             })
             .text(function(d, i) {
-                return d;
+                var dRank = d[0];
+                return dRank;
             })
             .on("mouseover", function(d) {
                 highlight(vis, member.id);
             })
             .on("mouseout", function() {
                 unhighlight(vis);
+            })
+            .append("svg:title")
+            .text(function(d, i) {
+                var dTime = d[1];
+                if (dTime < 24 * 60 * 60) {
+                    // https://stackoverflow.com/a/25279399/854540
+                    return new Date(1000 * dTime).toISOString().substr(11, 8);
+                }
+                else if (dTime === 24 * 60 * 60) {
+                    return "24:00:00"; // instead of 00:00:00
+                }
+                else {
+                    return ">24h"; // match personal leaderboard stats page
+                }
             });
     });
 }
