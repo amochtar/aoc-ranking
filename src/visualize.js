@@ -20,7 +20,7 @@ const ROW_HEIGHT = 35;
 
 const SortModes = {
     TOTAL_RANK: 0,
-    DAY_RANK: 1
+    DAY_RANK: 1,
 };
 
 export function visualize(data, mode = SortModes.TOTAL_RANK) {
@@ -55,7 +55,7 @@ export function visualize(data, mode = SortModes.TOTAL_RANK) {
 
     addNameLabels(vis, data, "left", SCALES.x(0) - PADDING.right, "end").attr(
         "y",
-        function(d) {
+        function (d) {
             if (mode === SortModes.DAY_RANK) {
                 return SCALES.y(d.ranks[0] - 1);
             }
@@ -68,7 +68,7 @@ export function visualize(data, mode = SortModes.TOTAL_RANK) {
         "right",
         SCALES.x(DAY_COUNT - 1) + PADDING.left,
         "start"
-    ).attr("y", function(d, i) {
+    ).attr("y", function (d, i) {
         if (mode === SortModes.DAY_RANK) {
             return SCALES.y(d.ranks[d.ranks.length - 1] - 1);
         }
@@ -137,31 +137,31 @@ function configureScales(data, height) {
         "#bcbd22",
         "#dbdb8d",
         "#17becf",
-        "#9edae5"
+        "#9edae5",
     ];
     SCALES.clr = d3.scaleOrdinal(schemeCategory20);
 }
 
 function highlight(vis, id) {
-    vis.selectAll("polyline").style("opacity", function(d) {
+    vis.selectAll("polyline").style("opacity", function (d) {
         return d.id == id ? HIGHLIGHT_OPACITY : DIMMED_OPACITY;
     });
 
-    vis.selectAll("circle").style("opacity", function(d) {
+    vis.selectAll("circle").style("opacity", function (d) {
         return DIMMED_OPACITY;
     });
-    vis.selectAll("circle.m" + id).style("opacity", function(d) {
+    vis.selectAll("circle.m" + id).style("opacity", function (d) {
         return HIGHLIGHT_OPACITY;
     });
 
-    vis.selectAll(".medal").style("opacity", function(d) {
+    vis.selectAll(".medal").style("opacity", function (d) {
         return DIMMED_OPACITY;
     });
-    vis.selectAll(".medal.m" + id).style("opacity", function(d) {
+    vis.selectAll(".medal.m" + id).style("opacity", function (d) {
         return HIGHLIGHT_OPACITY;
     });
 
-    vis.selectAll("text.label").style("opacity", function(d) {
+    vis.selectAll("text.label").style("opacity", function (d) {
         return d.id == id ? HIGHLIGHT_OPACITY : DIMMED_OPACITY;
     });
     vis.selectAll(".dayrank.completed.m" + id).style("visibility", "visible");
@@ -183,7 +183,7 @@ function addSorters(vis, data, mode) {
         .attr("y", "1em")
         // .attr('dy', '0')
         .attr("text-anchor", "middle")
-        .on("click", function() {
+        .on("click", function () {
             visualize(data, 1 - mode);
         });
 
@@ -192,7 +192,7 @@ function addSorters(vis, data, mode) {
     sortNode
         .append("tspan")
         .attr("class", "em")
-        .text(function() {
+        .text(function () {
             if (mode === SortModes.TOTAL_RANK) {
                 return "total score";
             }
@@ -201,7 +201,7 @@ function addSorters(vis, data, mode) {
 
     sortNode.append("tspan").text(". Switch to ranking on ");
 
-    sortNode.append("tspan").text(function() {
+    sortNode.append("tspan").text(function () {
         if (mode === SortModes.TOTAL_RANK) {
             return "score per day.";
         }
@@ -215,15 +215,15 @@ function addDayTickLines(vis, dayCount) {
         .enter()
         .append("svg:line")
         .attr("class", "tickLine")
-        .attr("x1", function(d) {
+        .attr("x1", function (d) {
             return SCALES.x(d + 0.5);
         })
-        .attr("x2", function(d) {
+        .attr("x2", function (d) {
             return SCALES.x(d + 0.5);
         })
         .attr("y1", SCALES.y.range()[0] - TICK_MARK_LENGTH)
         .attr("y2", SCALES.y.range()[1] + TICK_MARK_LENGTH)
-        .attr("visibility", function(d) {
+        .attr("visibility", function (d) {
             return d <= dayCount - 2 ? "visible" : "hidden";
         });
 }
@@ -234,13 +234,13 @@ function addLabels(vis, day_count, y, dy) {
         .enter()
         .append("svg:text")
         .attr("class", "day")
-        .attr("x", function(d) {
+        .attr("x", function (d) {
             return SCALES.x(d);
         })
         .attr("y", y)
         .attr("dy", dy)
         .attr("text-anchor", "middle")
-        .text(function(d, i) {
+        .text(function (d, i) {
             return i + 1;
         });
 }
@@ -251,7 +251,7 @@ function addRankingLines(vis, data, mode) {
         .enter()
         .append("svg:polyline")
         .attr("class", "ranking")
-        .attr("points", function(d, idx) {
+        .attr("points", function (d, idx) {
             var points = [];
             if (mode === SortModes.DAY_RANK) {
                 d.ranks.forEach((rank, i) => {
@@ -264,13 +264,13 @@ function addRankingLines(vis, data, mode) {
             }
             return points.join(" ");
         })
-        .style("stroke", function(d) {
+        .style("stroke", function (d) {
             return SCALES.clr(d.total_ranks[0]);
         })
-        .on("mouseover", function(d) {
+        .on("mouseover", function (d) {
             highlight(vis, d.id);
         })
-        .on("mouseout", function() {
+        .on("mouseout", function () {
             unhighlight(vis);
         });
 }
@@ -285,35 +285,32 @@ function addNameLabels(vis, data, cssClass, x, textAnchor) {
         .attr("x", x)
         .attr("dy", "0.35em")
         .attr("text-anchor", textAnchor)
-        .text(function(d) {
+        .text(function (d) {
             return d.name;
         })
-        .style("fill", function(d) {
+        .style("fill", function (d) {
             return SCALES.clr(d.total_ranks[0]);
         })
-        .on("mouseover", function(d) {
+        .on("mouseover", function (d) {
             highlight(vis, d.id);
         })
-        .on("mouseout", function() {
+        .on("mouseout", function () {
             unhighlight(vis);
         });
 }
 
 function addMedals(vis, data, mode) {
-    var symbolGenerator = d3
-        .symbol()
-        .type(d3.symbolStar)
-        .size(150);
+    var symbolGenerator = d3.symbol().type(d3.symbolStar).size(150);
     var pathData = symbolGenerator();
 
-    data.ranking.forEach(function(member, idx) {
+    data.ranking.forEach(function (member, idx) {
         vis.append("defs");
         vis.selectAll("path.medal.m" + member.id)
             .data(member.medals)
             .enter()
             .append("path")
             .attr("class", "medal m" + member.id)
-            .attr("transform", function(d, i) {
+            .attr("transform", function (d, i) {
                 if (mode === SortModes.DAY_RANK) {
                     return (
                         "translate(" +
@@ -331,14 +328,14 @@ function addMedals(vis, data, mode) {
                     ")"
                 );
             })
-            .filter(function(d, i) {
+            .filter(function (d, i) {
                 return 0 < d && d <= 3;
             })
             .attr("d", pathData)
-            .style("stroke", function(d, i) {
+            .style("stroke", function (d, i) {
                 return "#0f0f23";
             })
-            .style("fill", function(d, i) {
+            .style("fill", function (d, i) {
                 if (d == 1) {
                     return "gold";
                 } else if (d == 2) {
@@ -347,37 +344,37 @@ function addMedals(vis, data, mode) {
                     return "#963";
                 }
             })
-            .on("mouseover", function(d) {
+            .on("mouseover", function (d) {
                 highlight(vis, member.id);
             })
-            .on("mouseout", function() {
+            .on("mouseout", function () {
                 unhighlight(vis);
             });
     });
 }
 
 function addProgress(vis, data, mode) {
-    data.ranking.forEach(function(member, idx) {
+    data.ranking.forEach(function (member, idx) {
         vis.append("defs");
         vis.selectAll("circle.progress.m" + member.id)
-            .data(member.ranks)
+            .data(d3.zip(member.ranks, member.stats))
             .enter()
             .append("svg:circle")
             .attr("class", "progress m" + member.id)
-            .attr("cx", function(d, i) {
+            .attr("cx", function (d, i) {
                 return SCALES.x(i);
             })
-            .attr("cy", function(d, i) {
+            .attr("cy", function (d, i) {
                 if (mode === SortModes.DAY_RANK) {
                     return SCALES.y(member.ranks[i] - 1);
                 }
                 return SCALES.y(member.total_ranks[i] - 1);
             })
             .attr("r", 5)
-            .style("stroke", function(d, i) {
+            .style("stroke", function (d, i) {
                 return SCALES.clr(member.total_ranks[0]);
             })
-            .style("fill", function(d, i) {
+            .style("fill", function (d, i) {
                 if (member.stars[i] == 0) {
                     return "#0f0f23";
                 } else if (member.stars[i] == 1) {
@@ -401,8 +398,8 @@ function addProgress(vis, data, mode) {
                 }
                 return SCALES.clr(member.total_ranks[0]);
             })
-            .style("visibility", function(d, i) {
-                if (0 < d && d <= 3 && member.medals[i]) {
+            .style("visibility", function (d, i) {
+                if (0 < d[0] && d[0] <= 3 && member.medals[i]) {
                     return "hidden";
                 }
                 if (member.stars[i] < 2) {
@@ -413,68 +410,80 @@ function addProgress(vis, data, mode) {
                 }
                 return "hidden";
             })
-            .on("mouseover", function(d) {
+            .on("mouseover", function (d) {
                 highlight(vis, member.id);
             })
-            .on("mouseout", function() {
+            .on("mouseout", function () {
                 unhighlight(vis);
+            })
+            .append("svg:title")
+            .text(function (d, i) {
+                var stats = d[1];
+                var statsText = "";
+                if (stats[1] !== null) {
+                    statsText += `Part 1: ${statsFormat(stats[1])}\n`;
+                }
+                if (stats[2] !== null) {
+                    statsText += `Part 2: ${statsFormat(stats[2])}\n`;
+                }
+                return statsText;
             });
     });
 }
 
 function addDayRanking(vis, data, mode) {
-    data.ranking.forEach(function(member, idx) {
+    data.ranking.forEach(function (member, idx) {
         vis.append("defs");
         vis.selectAll("circle.dayrank.m" + member.id)
             .data(member.ranks)
             .enter()
             .append("svg:circle")
-            .attr("class", function(d, i) {
+            .attr("class", function (d, i) {
                 if (member.completed[i]) {
                     return "dayrank completed m" + member.id;
                 }
                 return "dayrank m" + member.id;
             })
-            .attr("cx", function(d, i) {
+            .attr("cx", function (d, i) {
                 return SCALES.x(i);
             })
-            .attr("cy", function(d, i) {
+            .attr("cy", function (d, i) {
                 if (mode === SortModes.DAY_RANK) {
                     return SCALES.y(member.ranks[i] - 1);
                 }
                 return SCALES.y(member.total_ranks[i] - 1);
             })
             .attr("r", 10)
-            .style("stroke", function(d, i) {
+            .style("stroke", function (d, i) {
                 return SCALES.clr(member.total_ranks[0]);
             })
-            .style("color", function(d, i) {
+            .style("color", function (d, i) {
                 return SCALES.clr(member.total_ranks[0]);
             })
-            .style("fill", function(d, i) {
+            .style("fill", function (d, i) {
                 return SCALES.clr(member.total_ranks[0]);
             })
             .style("visibility", "hidden")
-            .on("mouseover", function(d) {
+            .on("mouseover", function (d) {
                 highlight(vis, member.id);
             })
-            .on("mouseout", function() {
+            .on("mouseout", function () {
                 unhighlight(vis);
             });
         vis.selectAll("text.dayrank.m" + member.id)
-            .data(d3.zip(member.ranks, member.times))
+            .data(d3.zip(member.ranks, member.stats))
             .enter()
             .append("svg:text")
-            .attr("class", function(d, i) {
+            .attr("class", function (d, i) {
                 if (member.completed[i]) {
                     return "dayrank completed m" + member.id;
                 }
                 return "dayrank m" + member.id;
             })
-            .attr("x", function(d, i) {
+            .attr("x", function (d, i) {
                 return SCALES.x(i);
             })
-            .attr("y", function(d, i) {
+            .attr("y", function (d, i) {
                 if (mode === SortModes.DAY_RANK) {
                     return SCALES.y(member.ranks[i] - 1);
                 }
@@ -482,11 +491,11 @@ function addDayRanking(vis, data, mode) {
             })
             .attr("dy", "0.35em")
             .attr("text-anchor", "middle")
-            .style("stroke", function(d, i) {
+            .style("stroke", function (d, i) {
                 return "#0f0f23";
             })
             .style("visibility", "hidden")
-            .style("font-size", function(d, i) {
+            .style("font-size", function (d, i) {
                 var dRank = d[0];
                 if (dRank > 1000) {
                     return "xx-small";
@@ -496,29 +505,44 @@ function addDayRanking(vis, data, mode) {
                 }
                 return "small";
             })
-            .text(function(d, i) {
+            .text(function (d, i) {
                 var dRank = d[0];
                 return dRank;
             })
-            .on("mouseover", function(d) {
+            .on("mouseover", function (d) {
                 highlight(vis, member.id);
             })
-            .on("mouseout", function() {
+            .on("mouseout", function () {
                 unhighlight(vis);
             })
             .append("svg:title")
-            .text(function(d, i) {
-                var dTime = d[1];
-                if (dTime < 24 * 60 * 60) {
-                    // https://stackoverflow.com/a/25279399/854540
-                    return new Date(1000 * dTime).toISOString().substr(11, 8);
+            .text(function (d, i) {
+                var stats = d[1];
+                var statsText = "";
+                if (stats[1] !== null) {
+                    statsText += `Part 1: ${statsFormat(stats[1])}\n`;
                 }
-                else if (dTime === 24 * 60 * 60) {
-                    return "24:00:00"; // instead of 00:00:00
+                if (stats[2] !== null) {
+                    statsText += `Part 2: ${statsFormat(stats[2])}\n`;
                 }
-                else {
-                    return ">24h"; // match personal leaderboard stats page
-                }
+                return statsText;
             });
     });
+}
+
+function statsFormat(stats) {
+    return `${timeFormat(stats.time)} (Rank: ${stats.rank + 1} / Score: ${
+        stats.score
+    })`;
+}
+
+function timeFormat(time) {
+    if (time < 24 * 60 * 60) {
+        // https://stackoverflow.com/a/25279399/854540
+        return new Date(1000 * time).toISOString().substr(11, 8);
+    } else if (time === 24 * 60 * 60) {
+        return "24:00:00"; // instead of 00:00:00
+    } else {
+        return ">24h"; // match personal leaderboard stats page
+    }
 }
