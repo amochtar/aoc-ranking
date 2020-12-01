@@ -116,6 +116,14 @@ export function calculateRanking(data) {
                         ranking[member.id].stars[d] = l;
                         var score = max_score - index;
                         if (data.event == "2018" && d + 1 == 6) {
+                            // Because of a bug in the day 6 puzzle that made it
+                            // unsolvable for some users until about two hours
+                            // after unlock, day 6 is worth no points.
+                            score = 0;
+                        }
+                        if (data.event == "2020" && d + 1 == 1) {
+                            // Because of an outage during the day 1 puzzle unlock,
+                            // day 1 is worth no points.
                             score = 0;
                         }
                         ranking[member.id].scores[d] += score;

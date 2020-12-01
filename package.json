@@ -1,6 +1,6 @@
 {
   "name": "aoc-ranking-extension",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Visualize the ranking over time of a Advent of Code private leaderboard",
   "directories": {
     "test": "test"
