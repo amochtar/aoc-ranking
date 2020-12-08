@@ -47,7 +47,12 @@ function compareRankingByDay(day) {
 function compareTotalRankingByDay(day) {
     return function (a, b) {
         if (a.total_scores[day] === b.total_scores[day]) {
-            return +a.id - +b.id;
+            if (a.completed[day] === b.completed[day]) {
+                return +a.id - +b.id;
+            }
+            if (!a.completed[day]) return 1;
+            if (!b.completed[day]) return -1;
+            return a.completed[day] - b.completed[day];
         }
         return b.total_scores[day] - a.total_scores[day];
     };
