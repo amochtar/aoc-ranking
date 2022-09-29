@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/amochtar/aoc-ranking#readme",
   "dependencies": {
-    "d3": "^5.16.0",
+    "d3": "^7.6.1",
     "webextension-polyfill": "^0.5.0"
   },
   "devDependencies": {
