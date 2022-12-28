@@ -34,10 +34,16 @@ function compareMembersByDayLevel(day, level) {
 }
 
 // note: day is 0-based here
-function compareRankingByDay(day) {
+function compareRankingByDay(day, fallback) {
     return function (a, b) {
         if (a.scores[day] === b.scores[day]) {
-            return +a.id - +b.id;
+            if (fallback) {
+                return +a.id - +b.id;
+            }
+            if (day <= 0) {
+                return compareRankingByDay(day + 1, true)(a, b);
+            }
+            return compareRankingByDay(day - 1)(a, b);
         }
         return b.scores[day] - a.scores[day];
     };
